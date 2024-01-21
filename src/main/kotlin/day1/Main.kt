@@ -1,14 +1,11 @@
 package day1
 
-import java.io.BufferedReader
-import java.io.File
-import java.nio.file.Paths
-import kotlin.io.path.Path
+import org.example.readFile
 
 fun main(){
     println(
         getNumbers(
-            readFile("src/main/kotlin/day1/input.txt")
+            readFile("src/main/kotlin/day1/input.txt.txt")
         ).sum()
     )
 }
@@ -23,9 +20,7 @@ fun getNumbers(list: List<String>): List<Int> {
     }
 }
 
-fun readFile(filename: String): List<String>{
-    return Path(filename).toFile().useLines { it.toList() }
-}
+
 
 fun String.getFirstAndLast(): String = "${first()}${last()}"
 
