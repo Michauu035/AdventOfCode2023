@@ -1,6 +1,6 @@
 package org.example.day3
 
-fun part1(lines: List<String>) {
+fun part1(lines: List<String>):Int {
     val symbolRegex = Regex("[^0-9.]")
     val allNumbers = mutableListOf<Number>()
     val validNumbers = mutableListOf<Int>()
@@ -21,7 +21,7 @@ fun part1(lines: List<String>) {
             validNumbers.add(num.value)
         }
     }
-    println(validNumbers.sum())
+    return validNumbers.sum()
 }
 
 fun List<String>.checkProximity(y: Int, xPos1: Int, xPos2: Int, regex: Regex): Boolean {
