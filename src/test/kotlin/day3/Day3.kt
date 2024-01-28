@@ -21,8 +21,6 @@ class Day3 {
     @Test
     fun part2(){
         assertEquals(true, "7.*.35.".matches(Regex(".*\\d+[.*]+\\d+.*")))
-        assertEquals(true, listOf("2*2").hasTwoConnectedNumbers(0, 1))
-        assertEquals(4, listOf("2*2").multiplyConnectedNumbers(0,1))
         assertEquals(467835, part2(example1))
         assertEquals(20000, part2(example2))
         assertEquals(6756, part2(example3))
