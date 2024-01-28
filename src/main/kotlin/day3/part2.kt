@@ -11,7 +11,7 @@ fun part2(lines: List<String>): Int {
 
     val filteredSymbols = allSymbols.filter { lines.hasTwoConnectedNumbers(it.y, it.x) }
 
-    val sum = filteredSymbols.map { lines.multiplyConnectedNumbers(it.y, it.x) }.reduce {acc, i -> acc + i}
+    val sum = filteredSymbols.map { lines.multiplyConnectedNumbers(it.y, it.x) }.reduceOrNull {acc, i -> acc + i} ?: 0
     println(sum)
     return sum
 }
@@ -28,7 +28,8 @@ fun List<String>.hasTwoConnectedNumbers(y: Int, x: Int): Boolean {
     for (i in yStart..yEnd) {
         area.add(this[i].substring(xStart..(xEnd)))
     }
-    return area.joinToString("").replace(".", "").matches(Regex("\\d+[*]\\d+"))
+    val joined = area.joinToString(".").replace(Regex("[^0-9]+"), ".") + ";"
+    return joined.matches(Regex("[.]*\\d+[.]\\d+[.]*;"))
 }
 
 fun List<String>.multiplyConnectedNumbers(y: Int, x: Int): Int {
@@ -47,33 +48,17 @@ fun List<String>.multiplyConnectedNumbers(y: Int, x: Int): Int {
 
     for (a in area.indices) {
         area[a] = area[a].replace("*", "[*]")
-        val regex: Regex =
-           if (area[a].first() != '.' && area[a].last() != '.') {
-               Regex("\\d*${area[a]}\\d*")
-           } else if (area[a].first() == '.' && area[a].last() != '.') {
-               Regex("${area[a]}\\d*")
-           } else if (area[a].first() == '.' && area[a].last() == '.') {
-               Regex("\\d+[*]\\d+")
-           } else {
-               Regex("\\d*${area[a]}")
-           }
-        val num = regex.findAll(this[a + yStart]).toList().filter {
+        val regex: Regex = Regex("\\d+")
+        val foundAll = regex.findAll(this[a + yStart]).toList()
+        val num = foundAll.filter {
             xStart in it.range || xEnd in it.range
-        }
-        when (val n = num.firstOrNull()?.value) {
-            null -> { }
-            else -> {
-                if (n.contains(Regex("\\d+[*]\\d+"))) {
-                    foundNumbers.addAll(n.split("*").map { it.toInt() }.toTypedArray())
-                } else {
-                    foundNumbers.add(n.replace(Regex("[^0-9]"), "").toInt())
-                }
-            }
-        }
+        }.map { it.value.toInt() }
 
+        foundNumbers.addAll(num.toTypedArray())
     }
 
-    return  foundNumbers.reduce { acc, i -> acc * i}
+
+    return if(foundNumbers.size == 2) foundNumbers.reduceOrNull { acc, i -> acc * i} ?: 0 else 0
 }
 
 data class Symbol(val x: Int, val y: Int)
